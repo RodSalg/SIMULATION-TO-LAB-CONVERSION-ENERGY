@@ -16,12 +16,16 @@ float encontrar_Relu(float uRel, float l, float s)
 
 }
 
-float calculoCircuito(float uRel, float l1, float l2, float le, float s1, float s2, float se, float n, float i)
+
+float CalculoGeral(float uRel, float l1, float l2, float le, float s1, float s2, float se, float n, float i)
 {
 
     float R1;
     float R2;
     float Re;
+    float ni;
+    float B1;
+    float u = (4 * PI * pow(10, -7)); // permeabilidade do ar
 
     R1 = encontrar_Relu(uRel, l1, s1);
     R2 = encontrar_Relu(uRel, l2, s2);
@@ -30,27 +34,45 @@ float calculoCircuito(float uRel, float l1, float l2, float le, float s1, float 
     float F2 = (n * i) / (R2 + R1 * ((1 / f2pf1) + 1));
     float F1 = F2 / f2pf1;
     float B = F1 / se;
-
-    printf("relutancias: \nR1: %.2E \nR2: %.2E \nRe: %.2E\n", R1, R2, Re);
-    printf("Fluxos encontrados: \nFluxo 1: %f \nFluxo 2: %f \n ", F1, F2);
-    printf("inducao magnetica do entregerro b1: %f \n", B);
-    printf("catchau\n\n\n\n ********************************\n");
     
+    ni = R1 * (F2 + F2) + R2 * F2;
+
+    
+    printf("relutancias: \n\tR1: %.2E \n\tR2: %.2E \n\tRe: %.2E\n", R1, R2, Re);
+    printf("Fluxos encontrados: \n\tFluxo 1: %.2E \n\tFluxo 2: %.2E \n ", F1, F2);
+    printf("inducao magnetica do entreferro b1: %f \n", B);
+    printf("meu n x i = %.f\n", ni);
+    printf("\n\n\n\n ********************************\n");
+
+    float ur = 4973.59;
+    //variaveis para trabalhar no outro software
+    printf("\n\t Valores das variaveis\n");
+    printf("s1 =  %.2E\n", s1 );
+    printf("s2 =  %.2E\n", s2);
+    printf("se =  %.2E\n", se);
+    printf("l1 =  %.2E\n", l1);
+    printf("l2 =  %.2E\n", l2);
+    printf("l2 =  %.2E\n", l2);
+    printf("le =  %.2E\n", le);
+    printf("ur =  %.2E\n", ur);
+    printf("u =  %.2E\n", u);
+    printf("\n\n ********************************\n");
+
+    float b1_baixo;
+
+    /*float b1_pt1 = (l1 / u * ur * s1) + (l2 / u * ur * s2);
+    float b1_pt2 = (l1 / u * ur * s1) + (le / u * ur * se);
+    float b1_pt5d = (l2 / u * ur * s2);
+
+    b1_baixo = (l1 / u * ur * s1) + ((b1_pt1 * b1_pt2)/b1_pt5d);
+    float b1_se;
+    b1_se = se * b1_baixo;
+
+    B1 = ni / b1_se;*/
+    printf("\n\n\n\n ********************************\n");
 }
 
-void permeabilidade_aco_fundido(float B, float H){
-    float mi;
-    float mir;
-    float u = (4 * PI * pow(10, -7)); //permeabilidade do ar
-    mi = B / H;
-    mir = B/ (H * u );
-
-    printf("\tmi: %.2E \tmir = %f\n", mi, mir);
-
-
-}
-
-float permeabilidade_aco_silicio(float B, float H)
+void calculo_permeabilidade(float B, float H)
 {
     float mi;
     float mir;
@@ -61,15 +83,35 @@ float permeabilidade_aco_silicio(float B, float H)
     printf("\tmi: %.2E \tmir = %f\n", mi, mir);
 }
 
-float permeabilidade_ferro_fundido(float B, float H)
-{
-    float mi;
-    float mir;
-    float u = (4 * PI * pow(10, -7)); // permeabilidade do ar
-    mi = B / H;
-    mir = B / (H * u);
+void permeabilidade_aco_fundido(){
+    printf("permeabilidade do aco fundido: \n");
+    calculo_permeabilidade(0.2, 200);
+    calculo_permeabilidade(0.3, 250);
+    calculo_permeabilidade(0.6, 400);
+    calculo_permeabilidade(0.9, 600);
+    calculo_permeabilidade(1.1, 800);
+    calculo_permeabilidade(1.2, 1000);
+}
 
-    printf("\tmi: %.2E \tmir = %f\n", mi, mir);
+float permeabilidade_aco_silicio()
+{
+    printf("permeabilidade do aco silicio: \n");
+    calculo_permeabilidade(0.3, 48);
+    calculo_permeabilidade(0.4, 50);
+    calculo_permeabilidade(0.6, 75);
+    calculo_permeabilidade(0.8, 100);
+    calculo_permeabilidade(1.0, 200);
+    calculo_permeabilidade(1.2, 500);
+}
+
+float permeabilidade_ferro_fundido()
+{
+    printf("permeabilidade do ferro fundido: \n");
+    calculo_permeabilidade(0.1, 200);
+    calculo_permeabilidade(0.19, 400);
+    calculo_permeabilidade(0.2, 425);
+    calculo_permeabilidade(0.3, 700);
+    calculo_permeabilidade(0.4, 1000);
 }
 
 int main()
@@ -88,27 +130,10 @@ int main()
 
     printf("\t questao 1;\n\n\n");
 
-    calculoCircuito(uRel, l1, l2, le, s1, s2, se, n, i);
-    printf("permeabilidade do aco fundido: \n");
-    permeabilidade_aco_fundido(0.2, 200);
-    permeabilidade_aco_fundido(0.3, 250);
-    permeabilidade_aco_fundido(0.6, 400);
-    permeabilidade_aco_fundido(0.9, 600);
-    permeabilidade_aco_fundido(1.1, 800);
-    permeabilidade_aco_fundido(1.2, 1000);
-    printf("permeabilidade do aco silicio: \n");
-    permeabilidade_aco_silicio(0.3, 48);
-    permeabilidade_aco_silicio(0.4, 50);
-    permeabilidade_aco_silicio(0.6, 75);
-    permeabilidade_aco_silicio(0.8, 100);
-    permeabilidade_aco_silicio(1.0, 200);
-    permeabilidade_aco_silicio(1.2, 500);
-    printf("permeabilidade do ferro fundido: \n");
-    permeabilidade_ferro_fundido(0.1, 200);
-    permeabilidade_ferro_fundido(0.19, 400);
-    permeabilidade_ferro_fundido(0.2, 425);
-    permeabilidade_ferro_fundido(0.3, 700);
-    permeabilidade_ferro_fundido(0.4, 1000);
+    CalculoGeral(uRel, l1, l2, le, s1, s2, se, n, i);
+    permeabilidade_aco_fundido();
+    permeabilidade_aco_silicio();
+    permeabilidade_ferro_fundido();
 }
 
 
